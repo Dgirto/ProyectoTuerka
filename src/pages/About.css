@@ -1,0 +1,141 @@
+.about__hero {
+  display: grid;
+  grid-template-columns: 0.66fr 1fr;
+  min-height: 600px;
+}
+
+.about__copy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 56px clamp(16px, 3.5vw, 68px);
+}
+
+.about__title {
+  margin: 14px 0 28px;
+  font-size: clamp(52px, 5.4vw, 92px);
+}
+
+.about__copy p:not(.eyebrow) {
+  margin: 0 0 16px;
+  font-size: clamp(18px, 1.3vw, 23px);
+  color: var(--text);
+}
+
+.about__copy .btn {
+  margin-top: 16px;
+  min-width: 300px;
+}
+
+.about__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.about__steps {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 40px;
+  padding: 48px clamp(16px, 3.5vw, 68px);
+  background: var(--light);
+  color: #1a1a1a;
+  scroll-margin-top: var(--header-h);
+}
+
+.about__steps-title {
+  padding-right: 56px;
+  color: #0e0e0e;
+  font-size: clamp(44px, 4vw, 72px);
+}
+
+.about__steps ol {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.about__steps li {
+  border-left: 1px solid #c8c8c6;
+}
+
+.about__steps a {
+  display: flex;
+  gap: 28px;
+  padding: 8px clamp(16px, 3vw, 80px);
+  transition: transform 0.2s;
+}
+
+.about__steps a:hover {
+  transform: translateY(-3px);
+}
+
+.about__steps a:hover strong {
+  color: #b88a00;
+}
+
+.about__num {
+  font-family: var(--font-display);
+  font-size: 76px;
+  line-height: 0.9;
+  color: #b4b4b4;
+}
+
+.about__steps a > span:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.about__steps strong {
+  margin-top: 8px;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 30px;
+  line-height: 1;
+  color: #111;
+  transition: color 0.2s;
+}
+
+.about__steps small {
+  font-size: 16px;
+  color: #444;
+}
+
+@media (max-width: 1200px) {
+  .about__hero {
+    grid-template-columns: 1fr;
+  }
+  .about__img {
+    max-height: 520px;
+  }
+  .about__steps {
+    grid-template-columns: 1fr;
+  }
+  .about__steps-title {
+    padding: 0;
+  }
+}
+
+@media (max-width: 760px) {
+  .about__steps ol {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .about__steps li {
+    border-left: 0;
+    border-top: 1px solid #c8c8c6;
+    padding-top: 20px;
+  }
+  .about__steps a {
+    padding: 0;
+  }
+  .about__copy .btn {
+    min-width: 0;
+    width: 100%;
+  }
+}

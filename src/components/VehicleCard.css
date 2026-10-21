@@ -1,0 +1,103 @@
+.vcard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.vcard:hover {
+  border-color: var(--line-strong);
+  transform: translateY(-3px);
+}
+
+.vcard__media {
+  display: block;
+  aspect-ratio: 16 / 8;
+  overflow: hidden;
+  background: #1c1d20;
+}
+
+.vcard__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.vcard:hover .vcard__media img {
+  transform: scale(1.04);
+}
+
+.fav-btn {
+  display: inline-flex;
+  color: var(--white);
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.6));
+  transition: color 0.2s, transform 0.2s;
+}
+
+.fav-btn:hover {
+  transform: scale(1.1);
+}
+
+.fav-btn--active {
+  color: var(--yellow);
+}
+
+.vcard__fav {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+}
+
+.vcard__body {
+  padding: 18px 24px 20px;
+}
+
+.vcard__meta {
+  margin: 0;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.vcard__title {
+  margin: 2px 0 6px;
+  font-family: var(--font-condensed);
+  font-weight: 700;
+  font-size: 26px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.vcard__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.vcard__price {
+  margin: 0;
+  font-family: var(--font-condensed);
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 1;
+  color: var(--yellow);
+}
+
+.vcard__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding-bottom: 2px;
+  border-bottom: 1px solid currentColor;
+  color: var(--yellow);
+  font-family: var(--font-condensed);
+  font-weight: 600;
+  font-size: 17px;
+}
+
+.vcard__link:hover {
+  color: var(--white);
+}

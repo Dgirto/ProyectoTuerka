@@ -1,0 +1,22 @@
+.logo-link {
+  display: inline-flex;
+  text-decoration: none;
+}
+
+.logo {
+  display: inline-flex;
+  align-items: baseline;
+  color: var(--white);
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.logo__a {
+  height: 0.7em;
+  width: auto;
+  margin-left: 0.03em;
+  overflow: visible;
+}
