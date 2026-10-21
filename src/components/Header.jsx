@@ -1,11 +1,14 @@
 import { Link, useLocation } from 'react-router-dom';
 import Logo from './Logo';
-import { HeartIcon, MenuIcon, SearchIcon } from './Icons';
+import { HeartIcon, MenuIcon, SearchIcon, UserIcon } from './Icons';
+import { useAuth } from '../context/AuthContext';
+import { backendReady } from '../lib/supabase';
 import { useFavorites } from '../context/FavoritesContext';
 import './Header.css';
 
 export default function Header({ onOpenMenu, onOpenSearch }) {
   const { ids } = useFavorites();
+  const { user } = useAuth();
   const { pathname } = useLocation();
   const overlay = pathname === '/';
 
@@ -22,6 +25,17 @@ export default function Header({ onOpenMenu, onOpenSearch }) {
         </div>
 
         <div className="header__actions">
+          {backendReady && (
+            <>
+              <Link to={user ? '/cuenta' : '/ingresar'} className="header__fav header__account" aria-label={user ? 'Mi cuenta' : 'Ingresar'}>
+                <span className="header__fav-label">{user ? 'Mi cuenta' : 'Ingresar'}</span>
+                <span className="header__fav-icon">
+                  <UserIcon size={22} />
+                </span>
+              </Link>
+              <span className="header__divider" aria-hidden="true" />
+            </>
+          )}
           <Link to="/favoritos" className="header__fav" aria-label={`Favoritos (${ids.length})`}>
             <span className="header__fav-label">Favoritos</span>
             <span className="header__fav-icon">

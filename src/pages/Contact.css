@@ -261,3 +261,30 @@
 .cform__error + .cform__submit {
   margin-top: 14px;
 }
+
+/* Sin sesión: invitación a ingresar antes de cotizar */
+.contact__login {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 24px 0;
+}
+
+.contact__login h2 {
+  margin: 8px 0 0;
+  color: #111;
+  font-size: clamp(36px, 3vw, 52px);
+}
+
+.contact__login p {
+  margin: 0;
+  color: #444;
+  font-size: 18px;
+  line-height: 1.45;
+}
+
+.cfield input[readonly] {
+  background: #ececea;
+  color: #555;
+}

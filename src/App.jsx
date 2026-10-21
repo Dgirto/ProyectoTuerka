@@ -11,6 +11,11 @@ import Favorites from './pages/Favorites';
 import Contact from './pages/Contact';
 import About from './pages/About';
 import NotFound from './pages/NotFound';
+import Ingresar from './pages/Ingresar';
+import Cuenta from './pages/Cuenta';
+import Asesor from './pages/Asesor';
+import ReservaResultado from './pages/ReservaResultado';
+import RequireAuth from './components/RequireAuth';
 
 const TITLES = {
   '/': 'Tu próximo camino empieza aquí',
@@ -18,6 +23,10 @@ const TITLES = {
   '/favoritos': 'Favoritos',
   '/contacto': 'Contacto',
   '/nosotros': 'Nosotros',
+  '/ingresar': 'Ingresar',
+  '/cuenta': 'Mi cuenta',
+  '/asesor': 'Panel de asesor',
+  '/reserva/resultado': 'Reserva',
 };
 
 // Lleva al inicio de la página (o al ancla #id) en cada cambio de ruta.
@@ -68,6 +77,10 @@ export default function App() {
           <Route path="/favoritos" element={<Favorites />} />
           <Route path="/contacto" element={<Contact />} />
           <Route path="/nosotros" element={<About />} />
+          <Route path="/ingresar" element={<Ingresar />} />
+          <Route path="/cuenta" element={<RequireAuth><Cuenta /></RequireAuth>} />
+          <Route path="/asesor" element={<RequireAuth asesor><Asesor /></RequireAuth>} />
+          <Route path="/reserva/resultado" element={<RequireAuth><ReservaResultado /></RequireAuth>} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>

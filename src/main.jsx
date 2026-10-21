@@ -13,13 +13,16 @@ import '@fontsource/montserrat/800.css';
 import './index.css';
 import App from './App';
 import { FavoritesProvider } from './context/FavoritesContext';
+import { AuthProvider } from './context/AuthContext';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>
-      <FavoritesProvider>
-        <App />
-      </FavoritesProvider>
+      <AuthProvider>
+        <FavoritesProvider>
+          <App />
+        </FavoritesProvider>
+      </AuthProvider>
     </BrowserRouter>
   </React.StrictMode>
 );

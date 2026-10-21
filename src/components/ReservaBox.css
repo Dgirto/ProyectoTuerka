@@ -1,0 +1,51 @@
+.reserva {
+  margin-top: 14px;
+}
+
+.reserva__btn {
+  min-height: 52px;
+}
+
+.reserva__note {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+  text-align: center;
+}
+
+.reserva__error {
+  margin: 10px 0 0;
+  padding: 10px 12px;
+  border-left: 3px solid var(--danger);
+  background: rgba(255, 90, 82, 0.12);
+  color: #ffb3ae;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.reserva--tomada {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px;
+  background: rgba(255, 194, 14, 0.12);
+  border: 1px solid var(--yellow);
+  color: var(--yellow);
+  font-weight: 600;
+}
+
+/* Etiqueta «Reservado» sobre la foto en las tarjetas */
+.vcard__reservado {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 5px 10px;
+  background: var(--yellow);
+  color: var(--black);
+  font-family: var(--font-condensed);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}

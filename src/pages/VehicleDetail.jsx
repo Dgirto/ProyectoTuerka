@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Breadcrumbs } from '../components/ui';
 import VehicleCard from '../components/VehicleCard';
+import ReservaBox from '../components/ReservaBox';
 import { CalendarIcon, CheckIcon, ChevronLeft, ChevronRight, FuelIcon, GaugeIcon, GearsIcon, HeartIcon } from '../components/Icons';
 import { useFavorites } from '../context/FavoritesContext';
 import { formatPrice, getVehicle, typeLabel, vehicleName, vehicles } from '../data/vehicles';
@@ -82,6 +83,7 @@ function Detail({ vehicle }) {
           <Link to={`/contacto?vehiculo=${vehicle.id}&motivo=info#agenda`} className="btn btn--outline btn--block detail__cta detail__cta--ghost">
             Solicitar información <ChevronRight size={20} />
           </Link>
+          <ReservaBox vehicle={vehicle} />
           <button type="button" className={`detail__fav ${fav ? 'is-active' : ''}`} onClick={() => toggle(vehicle.id)} aria-pressed={fav}>
             <HeartIcon size={24} filled={fav} />
             {fav ? 'Guardado en favoritos' : 'Guardar en favoritos'}

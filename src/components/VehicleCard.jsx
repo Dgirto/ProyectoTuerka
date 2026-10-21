@@ -2,6 +2,8 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, HeartIcon } from './Icons';
 import { useFavorites } from '../context/FavoritesContext';
 import { formatPrice, vehicleName } from '../data/vehicles';
+import { useReservados } from '../hooks/useReservados';
+import './ReservaBox.css';
 import './VehicleCard.css';
 
 export function FavoriteButton({ id, name, className = '' }) {
@@ -25,8 +27,10 @@ export function FavoriteButton({ id, name, className = '' }) {
 
 export default function VehicleCard({ vehicle }) {
   const name = vehicleName(vehicle);
+  const reservado = useReservados().has(vehicle.id);
   return (
     <article className="vcard">
+      {reservado && <span className="vcard__reservado">Reservado</span>}
       <Link to={`/vehiculos/${vehicle.id}`} className="vcard__media" tabIndex={-1} aria-hidden="true">
         <img src={vehicle.image} alt="" loading="lazy" />
       </Link>

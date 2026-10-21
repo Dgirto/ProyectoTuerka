@@ -1,9 +1,11 @@
-import { useState } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import { Breadcrumbs } from '../components/ui';
-import { ArrowRight, CalendarCheckIcon, ChatIcon, CheckIcon } from '../components/Icons';
+import { ArrowRight, CalendarCheckIcon, ChatIcon, CheckIcon, UserIcon } from '../components/Icons';
 import { getVehicle, vehicleName } from '../data/vehicles';
 import interior from '../assets/interior.jpg';
+import { useAuth } from '../context/AuthContext';
+import { backendReady, supabase } from '../lib/supabase';
 import './Contact.css';
 
 const STORAGE_KEY = 'tuerka:solicitudes';
@@ -33,6 +35,17 @@ function templateParams(f) {
     mensaje: f.mensaje.trim() || 'Sin mensaje adicional.',
     time: new Date().toLocaleString('es-PE', { dateStyle: 'long', timeStyle: 'short' }),
   };
+}
+
+// Aviso por correo con EmailJS. Si falla, no bloquea: la cotización ya quedó guardada.
+async function notificarPorCorreo(f) {
+  const { default: emailjs } = await import('@emailjs/browser');
+  await emailjs.send(EMAILJS.serviceId, EMAILJS.templateId, templateParams(f), {
+    publicKey: EMAILJS.publicKey,
+    // Antispam: una solicitud cada 10 s por visitante y sin navegadores automatizados.
+    limitRate: { id: 'tuerka-visita', throttle: 10000 },
+    blockHeadless: true,
+  });
 }
 
 function saveLocally(f) {
@@ -73,6 +86,20 @@ export default function Contact() {
   const [form, setForm] = useState(() => initialForm(params));
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState('idle'); // idle | sending | sent | error
+  const { user, perfil, loading } = useAuth();
+  const { pathname, search, hash } = useLocation();
+  const vehiculoId = getVehicle(params.get('vehiculo'))?.id ?? null;
+
+  // Con sesión iniciada, se completan los datos del perfil y el correo es el de la cuenta.
+  useEffect(() => {
+    if (!user || !perfil) return;
+    setForm((f) => ({
+      ...f,
+      nombre: f.nombre || perfil.nombre || '',
+      telefono: f.telefono || perfil.telefono || '',
+      correo: user.email,
+    }));
+  }, [user, perfil]);
 
   const set = (key) => (e) => {
     const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
@@ -91,21 +118,34 @@ export default function Contact() {
     }
     setStatus('sending');
 
+    // Con backend: la cotización se guarda en la base de datos (la ve el cliente y la responde un asesor).
+    if (backendReady) {
+      const { error } = await supabase.from('cotizaciones').insert({
+        vehiculo_id: vehiculoId,
+        vehiculo: form.vehiculo.trim() || 'Sin especificar',
+        telefono: form.telefono.trim(),
+        fecha_visita: form.fecha || null,
+        mensaje: form.mensaje.trim() || null,
+      });
+      if (error) {
+        console.error('Error al guardar la cotización:', error);
+        setStatus('error');
+        return;
+      }
+      if (emailjsReady) await notificarPorCorreo(form).catch((err) => console.error('Aviso por correo no enviado:', err));
+      setStatus('sent');
+      return;
+    }
+
     if (!emailjsReady) {
-      // Sin credenciales (p. ej. en desarrollo): se guarda solo en el navegador.
+      // Sin backend ni EmailJS (p. ej. en desarrollo): se guarda solo en el navegador.
       saveLocally(form);
       setStatus('sent');
       return;
     }
 
     try {
-      const { default: emailjs } = await import('@emailjs/browser');
-      await emailjs.send(EMAILJS.serviceId, EMAILJS.templateId, templateParams(form), {
-        publicKey: EMAILJS.publicKey,
-        // Antispam: una solicitud cada 10 s por visitante y sin navegadores automatizados.
-        limitRate: { id: 'tuerka-visita', throttle: 10000 },
-        blockHeadless: true,
-      });
+      await notificarPorCorreo(form);
       saveLocally(form);
       setStatus('sent');
     } catch (error) {
@@ -115,9 +155,13 @@ export default function Contact() {
   };
 
   const reset = () => {
-    setForm(initialForm(new URLSearchParams()));
+    const vacio = initialForm(new URLSearchParams());
+    setForm(user ? { ...vacio, nombre: perfil?.nombre ?? '', telefono: perfil?.telefono ?? '', correo: user.email } : vacio);
     setStatus('idle');
   };
+
+  const volver = encodeURIComponent(`${pathname}${search}${hash || '#agenda'}`);
+  const pedirCuenta = backendReady && !loading && !user;
 
   const field = (key, label, input, required = false) => (
     <div className={`cfield ${errors[key] ? 'has-error' : ''}`}>
@@ -182,12 +226,36 @@ export default function Contact() {
               {form.fecha ? ` para confirmar tu visita del ${new Date(`${form.fecha}T12:00`).toLocaleDateString('es', { day: 'numeric', month: 'long' })}` : ''}.
             </p>
             <div className="contact__success-actions">
-              <Link to="/vehiculos" className="btn btn--primary">
-                Seguir explorando <ArrowRight size={20} />
-              </Link>
+              {user ? (
+                <Link to="/cuenta" className="btn btn--primary">
+                  Ver mis cotizaciones <ArrowRight size={20} />
+                </Link>
+              ) : (
+                <Link to="/vehiculos" className="btn btn--primary">
+                  Seguir explorando <ArrowRight size={20} />
+                </Link>
+              )}
               <button type="button" className="btn btn--outline-dark" onClick={reset}>
                 Enviar otra solicitud
               </button>
+            </div>
+          </div>
+        ) : pedirCuenta ? (
+          <div className="contact__login">
+            <span className="contact__success-icon">
+              <UserIcon size={36} />
+            </span>
+            <h2 id="agenda-title" className="display">
+              Agenda tu visita
+            </h2>
+            <p>Ingresa a tu cuenta para pedir tu cotización. Así podrás seguir su estado y ver la respuesta del asesor.</p>
+            <div className="contact__success-actions">
+              <Link to={`/ingresar?volver=${volver}`} className="btn btn--primary">
+                Ingresar <ArrowRight size={20} />
+              </Link>
+              <Link to={`/ingresar?modo=registro&volver=${volver}`} className="btn btn--outline-dark">
+                Crear cuenta
+              </Link>
             </div>
           </div>
         ) : (
@@ -201,7 +269,7 @@ export default function Contact() {
               {field('nombre', 'Nombre completo', <input {...aria('nombre')} type="text" autoComplete="name" placeholder="Tu nombre completo" value={form.nombre} onChange={set('nombre')} />, true)}
               {field('telefono', 'Teléfono', <input {...aria('telefono')} type="tel" autoComplete="tel" placeholder="Tu número de teléfono" value={form.telefono} onChange={set('telefono')} />, true)}
             </div>
-            {field('correo', 'Correo electrónico', <input {...aria('correo')} type="email" autoComplete="email" placeholder="tu@correo.com" value={form.correo} onChange={set('correo')} />, true)}
+            {field('correo', 'Correo electrónico', <input {...aria('correo')} type="email" autoComplete="email" placeholder="tu@correo.com" value={form.correo} onChange={set('correo')} readOnly={Boolean(user)} title={user ? 'Es el correo de tu cuenta' : undefined} />, true)}
             <div className="cform__row">
               {field('vehiculo', 'Vehículo de interés', <input {...aria('vehiculo')} type="text" placeholder="Ej. SUV, pickup, sedán, marca o modelo" value={form.vehiculo} onChange={set('vehiculo')} />)}
               {field('fecha', 'Fecha preferida', <input {...aria('fecha')} type="date" min={today()} value={form.fecha} onChange={set('fecha')} />)}
