@@ -11,6 +11,8 @@ npm run dev
 
 Abre http://localhost:5173. Para generar la versión de producción usa `npm run build` (sale en `dist/`) y `npm run preview` para probarla.
 
+En Vercel, `vercel.json` redirige todas las rutas a `index.html` para que React Router resuelva las páginas internas (por ejemplo `/vehiculos`) al abrirlas directamente o al recargar.
+
 ## Páginas
 
 | Ruta | Página |
