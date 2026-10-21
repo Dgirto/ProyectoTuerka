@@ -32,6 +32,12 @@ El menú a pantalla completa y el buscador (ícono de lupa) están disponibles e
 - **Logo:** `src/components/Logo.jsx` ("TUERK" + la "A" con la pata amarilla, en SVG).
 - **Colores y tipografías:** variables al inicio de `src/index.css`.
 
-## Pendiente para producción
+## Formulario de contacto (EmailJS)
 
-El formulario de contacto todavía no envía datos a ningún servidor. Las solicitudes solo se guardan en el navegador (`localStorage`, clave `tuerka:solicitudes`). Para recibirlas de verdad, conecta `submit` en `src/pages/Contact.jsx` a tu API o a un servicio de formularios.
+El formulario «Agenda tu visita» de `/contacto` envía la solicitud por correo con [EmailJS](https://www.emailjs.com). La plantilla de EmailJS usa las variables `{{nombre}}`, `{{telefono}}`, `{{correo}}`, `{{vehiculo}}`, `{{fecha}}`, `{{mensaje}}` y `{{time}}`; los campos opcionales vacíos llegan como «Sin especificar».
+
+1. Copia `.env.example` como `.env` y completa `VITE_EMAILJS_SERVICE_ID`, `VITE_EMAILJS_TEMPLATE_ID` y `VITE_EMAILJS_PUBLIC_KEY`. Reinicia `npm run dev`.
+2. En Vercel, añade las mismas variables en **Settings → Environment Variables** y vuelve a desplegar.
+3. En EmailJS, **Account → Security**, permite solo el dominio del sitio.
+
+`.env` no se sube al repositorio. Si faltan las variables, la solicitud solo se guarda en el navegador (`localStorage`, clave `tuerka:solicitudes`). El logo para los correos está en `public/email/logo-tuerka.png`, porque los clientes de correo no muestran SVG.

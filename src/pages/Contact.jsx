@@ -12,6 +12,38 @@ const PHONE_RE = /^\+?[\d\s()-]{7,20}$/;
 
 const today = () => new Date().toISOString().slice(0, 10);
 
+// Credenciales públicas de EmailJS (ver .env.example). Si faltan, la solicitud solo se guarda en el navegador.
+const EMAILJS = {
+  serviceId: import.meta.env.VITE_EMAILJS_SERVICE_ID,
+  templateId: import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+  publicKey: import.meta.env.VITE_EMAILJS_PUBLIC_KEY,
+};
+const emailjsReady = Boolean(EMAILJS.serviceId && EMAILJS.templateId && EMAILJS.publicKey);
+
+const formatDate = (iso, opts) => new Date(`${iso}T12:00`).toLocaleDateString('es-PE', opts);
+
+// Variables de la plantilla de correo; los campos opcionales vacíos se envían con un texto en lugar de quedar en blanco.
+function templateParams(f) {
+  return {
+    nombre: f.nombre.trim(),
+    telefono: f.telefono.trim(),
+    correo: f.correo.trim(),
+    vehiculo: f.vehiculo.trim() || 'Sin especificar',
+    fecha: f.fecha ? formatDate(f.fecha, { day: 'numeric', month: 'long', year: 'numeric' }) : 'Sin especificar',
+    mensaje: f.mensaje.trim() || 'Sin mensaje adicional.',
+    time: new Date().toLocaleString('es-PE', { dateStyle: 'long', timeStyle: 'short' }),
+  };
+}
+
+function saveLocally(f) {
+  try {
+    const prev = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    localStorage.setItem(STORAGE_KEY, JSON.stringify([...prev, { ...f, enviado: new Date().toISOString() }]));
+  } catch {
+    /* almacenamiento no disponible */
+  }
+}
+
 function initialForm(params) {
   const v = getVehicle(params.get('vehiculo'));
   const name = v ? `${vehicleName(v)} ${v.year}` : '';
@@ -40,7 +72,7 @@ export default function Contact() {
   const [params] = useSearchParams();
   const [form, setForm] = useState(() => initialForm(params));
   const [errors, setErrors] = useState({});
-  const [status, setStatus] = useState('idle'); // idle | sending | sent
+  const [status, setStatus] = useState('idle'); // idle | sending | sent | error
 
   const set = (key) => (e) => {
     const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
@@ -48,7 +80,7 @@ export default function Contact() {
     if (errors[key]) setErrors((err) => ({ ...err, [key]: undefined }));
   };
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
     const found = validate(form);
     setErrors(found);
@@ -58,16 +90,28 @@ export default function Contact() {
       return;
     }
     setStatus('sending');
-    // Sin backend: la solicitud se guarda localmente para simular el envío.
-    setTimeout(() => {
-      try {
-        const prev = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-        localStorage.setItem(STORAGE_KEY, JSON.stringify([...prev, { ...form, enviado: new Date().toISOString() }]));
-      } catch {
-        /* almacenamiento no disponible */
-      }
+
+    if (!emailjsReady) {
+      // Sin credenciales (p. ej. en desarrollo): se guarda solo en el navegador.
+      saveLocally(form);
       setStatus('sent');
-    }, 700);
+      return;
+    }
+
+    try {
+      const { default: emailjs } = await import('@emailjs/browser');
+      await emailjs.send(EMAILJS.serviceId, EMAILJS.templateId, templateParams(form), {
+        publicKey: EMAILJS.publicKey,
+        // Antispam: una solicitud cada 10 s por visitante y sin navegadores automatizados.
+        limitRate: { id: 'tuerka-visita', throttle: 10000 },
+        blockHeadless: true,
+      });
+      saveLocally(form);
+      setStatus('sent');
+    } catch (error) {
+      console.error('Error al enviar la solicitud:', error);
+      setStatus('error');
+    }
   };
 
   const reset = () => {
@@ -173,6 +217,12 @@ export default function Contact() {
             {errors.privacidad && (
               <p className="cfield__error" role="alert">
                 {errors.privacidad}
+              </p>
+            )}
+
+            {status === 'error' && (
+              <p className="cfield__error cform__error" role="alert">
+                No pudimos enviar tu solicitud. Revisa tu conexión e inténtalo de nuevo en unos segundos.
               </p>
             )}
 

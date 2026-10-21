@@ -248,3 +248,16 @@
     padding: 22px 18px;
   }
 }
+
+/* Error al enviar con EmailJS */
+.cform__error {
+  margin-top: 20px;
+  padding: 12px 14px;
+  border-left: 3px solid #e0362b;
+  background: #fdecea;
+  font-weight: 600;
+}
+
+.cform__error + .cform__submit {
+  margin-top: 14px;
+}
