@@ -20,8 +20,8 @@ export const VEHICLE_TYPES = [
 
 export const BUDGETS = [
   { id: 'hasta-20', label: 'Hasta US$ 20,000', min: 0, max: 20000 },
-  { id: '20-30', label: 'US$ 20,000 – 30,000', min: 20000, max: 30000 },
-  { id: '30-mas', label: 'Más de US$ 30,000', min: 30000, max: Infinity },
+  { id: '20-30', label: 'US$ 20,000 – 30,000', min: 20000, max: 30000, minExclusive: true },
+  { id: '30-mas', label: 'Más de US$ 30,000', min: 30000, max: Infinity, minExclusive: true },
 ];
 
 export const vehicles = [

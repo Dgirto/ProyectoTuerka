@@ -218,3 +218,6 @@
     flex: 1;
   }
 }
+
+.filters__error { color: var(--danger); font-size: 15px; }
+.catalog__layout > section { min-width: 0; }

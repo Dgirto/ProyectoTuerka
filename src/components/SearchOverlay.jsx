@@ -3,15 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight, CloseIcon, SearchIcon } from './Icons';
 import { formatPrice, typeLabel, vehicleName, vehicles } from '../data/vehicles';
 import './SearchOverlay.css';
-
-export function matchesQuery(v, q) {
-  const text = `${v.brand} ${v.model} ${typeLabel(v.type)} ${v.year} ${v.transmission} ${v.fuel}`.toLowerCase();
-  return q
-    .toLowerCase()
-    .split(/\s+/)
-    .filter(Boolean)
-    .every((word) => text.includes(word));
-}
+import { matchesQuery } from '../lib/catalogo';
 
 export default function SearchOverlay({ open, onClose }) {
   const [q, setQ] = useState('');

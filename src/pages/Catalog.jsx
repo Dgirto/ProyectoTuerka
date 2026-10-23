@@ -3,11 +3,9 @@ import { useSearchParams } from 'react-router-dom';
 import VehicleCard from '../components/VehicleCard';
 import { Select } from '../components/ui';
 import { CloseIcon } from '../components/Icons';
-import { matchesQuery } from '../components/SearchOverlay';
+import { FILTER_KEYS, draftFromParams, filterVehicles, priceRangeError } from '../lib/catalogo';
 import { BRANDS, BUDGETS, VEHICLE_TYPES, YEARS, vehicles } from '../data/vehicles';
 import './Catalog.css';
-
-const FILTER_KEYS = ['marca', 'tipo', 'condicion', 'min', 'max', 'anio', 'transmision'];
 
 const SORTS = [
   { value: 'precio-asc', label: 'Precio: menor a mayor' },
@@ -16,11 +14,10 @@ const SORTS = [
   { value: 'nombre', label: 'Nombre: A – Z' },
 ];
 
-const draftFromParams = (params) => Object.fromEntries(FILTER_KEYS.map((k) => [k, params.get(k) ?? '']));
-
 export default function Catalog() {
   const [params, setParams] = useSearchParams();
   const [draft, setDraft] = useState(() => draftFromParams(params));
+  const [error, setError] = useState('');
   const [filtersOpen, setFiltersOpen] = useState(false);
 
   useEffect(() => setDraft(draftFromParams(params)), [params]);
@@ -29,45 +26,26 @@ export default function Catalog() {
   const q = params.get('q') || '';
   const budget = BUDGETS.find((b) => b.id === params.get('presupuesto'));
 
-  const results = useMemo(() => {
-    const f = draftFromParams(params);
-    const min = Number(f.min) || 0;
-    const max = Number(f.max) || Infinity;
-    const list = vehicles.filter(
-      (v) =>
-        (!f.marca || v.brand === f.marca) &&
-        (!f.tipo || v.type === f.tipo) &&
-        (!f.condicion || v.condition === f.condicion) &&
-        (!f.anio || v.year === Number(f.anio)) &&
-        (!f.transmision || v.transmission === f.transmision) &&
-        v.price >= min &&
-        v.price <= max &&
-        (!budget || (v.price >= budget.min && v.price < budget.max)) &&
-        (!q || matchesQuery(v, q))
-    );
-    const sorters = {
-      'precio-asc': (a, b) => a.price - b.price,
-      'precio-desc': (a, b) => b.price - a.price,
-      'anio-desc': (a, b) => b.year - a.year,
-      nombre: (a, b) => `${a.brand} ${a.model}`.localeCompare(`${b.brand} ${b.model}`),
-    };
-    return [...list].sort(sorters[sort] ?? sorters['precio-asc']);
-  }, [params, sort, q, budget]);
+  const results = useMemo(() => filterVehicles(vehicles, params), [params]);
 
   const update = (mutate) => {
     const next = new URLSearchParams(params);
     mutate(next);
-    setParams(next, { replace: true });
+    setParams(next);
   };
 
   const apply = (e) => {
     e.preventDefault();
+    const message = priceRangeError(draft);
+    setError(message);
+    if (message) return;
     update((next) => FILTER_KEYS.forEach((k) => (draft[k] ? next.set(k, draft[k]) : next.delete(k))));
     setFiltersOpen(false);
   };
 
   const clear = () => {
-    setParams(sort !== 'precio-asc' ? { orden: sort } : {}, { replace: true });
+    setError('');
+    setParams(sort !== 'precio-asc' ? { orden: sort } : {});
     setFiltersOpen(false);
   };
 
@@ -76,6 +54,10 @@ export default function Catalog() {
   const activeChips = [
     q && { key: 'q', label: `“${q}”` },
     budget && { key: 'presupuesto', label: budget.label },
+    ...FILTER_KEYS.filter((key) => params.get(key)).map((key) => ({
+      key, label: key === 'tipo' ? VEHICLE_TYPES.find((t) => t.id === params.get(key))?.label || params.get(key)
+        : key === 'min' ? `Desde US$ ${params.get(key)}` : key === 'max' ? `Hasta US$ ${params.get(key)}` : params.get(key),
+    })),
   ].filter(Boolean);
 
   return (
@@ -110,7 +92,7 @@ export default function Catalog() {
       {activeChips.length > 0 && (
         <div className="catalog__chips">
           {activeChips.map((c) => (
-            <button key={c.key} type="button" className="chip" onClick={() => update((next) => next.delete(c.key))}>
+            <button key={c.key} type="button" className="chip" aria-label={`Quitar filtro: ${c.label}`} onClick={() => update((next) => next.delete(c.key))}>
               {c.label} <CloseIcon size={14} />
             </button>
           ))}
@@ -142,8 +124,8 @@ export default function Catalog() {
             <fieldset>
               <legend>Precio</legend>
               <div className="filters__range">
-                <input className="field-input" type="number" min="0" step="500" inputMode="numeric" placeholder="Mínimo (US$)" aria-label="Precio mínimo en dólares" value={draft.min} onChange={(e) => set('min')(e.target.value)} />
-                <input className="field-input" type="number" min="0" step="500" inputMode="numeric" placeholder="Máximo (US$)" aria-label="Precio máximo en dólares" value={draft.max} onChange={(e) => set('max')(e.target.value)} />
+                <input className="field-input" type="number" min="0" step="any" inputMode="numeric" placeholder="Mínimo (US$)" aria-label="Precio mínimo en dólares" value={draft.min} onChange={(e) => set('min')(e.target.value)} />
+                <input className="field-input" type="number" min="0" step="any" inputMode="numeric" placeholder="Máximo (US$)" aria-label="Precio máximo en dólares" value={draft.max} onChange={(e) => set('max')(e.target.value)} />
               </div>
             </fieldset>
             <fieldset>
@@ -155,6 +137,7 @@ export default function Catalog() {
               <Select label="Transmisión" placeholder="Todas" value={draft.transmision} onChange={set('transmision')} options={[{ value: 'Automático', label: 'Automático' }, { value: 'Manual', label: 'Manual' }]} />
             </fieldset>
 
+            {error && <p className="filters__error" role="alert">{error}</p>}
             <button type="submit" className="btn btn--primary btn--block filters__apply">
               Aplicar filtros
             </button>
