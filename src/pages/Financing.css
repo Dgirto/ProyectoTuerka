@@ -1,0 +1,22 @@
+.financing { padding-top: 28px; padding-bottom: 72px; }
+.financing__head { max-width: 1000px; margin: 36px 0; }
+.financing__head h1 { font-size: clamp(52px, 6vw, 96px); margin: 12px 0 20px; }
+.financing__layout { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+.financing__form, .financing__result { min-width: 0; padding: clamp(20px, 3vw, 44px); background: var(--panel); border: 1px solid var(--line); }
+.financing h2 { font-family: var(--font-condensed); font-size: 30px; margin: 0 0 24px; }
+.financing__form > label:not(.select) { display: block; margin: 20px 0 8px; font-weight: 600; }
+.financing__vehicle { display: flex; align-items: center; gap: 20px; padding: 20px 0; border-bottom: 1px solid var(--line-strong); }
+.financing__vehicle img { width: 38%; aspect-ratio: 16/10; object-fit: cover; }
+.financing__vehicle p { color: var(--yellow); margin: 4px 0; font-size: 24px; }
+.financing__vehicle small, .financing__note { color: var(--muted); font-size: 15px; }
+.financing__result .eyebrow { margin-bottom: 20px; }
+.financing__result h2 { margin-bottom: 8px; }
+.financing__payment { margin: 0; font-family: var(--font-condensed); font-weight: 700; color: var(--yellow); font-size: clamp(44px, 5vw, 76px); line-height: 1.1; overflow-wrap: anywhere; }
+.financing dl { margin: 32px 0; }
+.financing dl > div { display: flex; justify-content: space-between; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.financing dt { color: var(--muted); }
+.financing dd { text-align: right; margin: 0; font-weight: 600; }
+.financing__total dt { color: var(--white); }
+.financing__back { display: block; text-align: center; text-decoration: underline; margin-top: 16px; }
+.financing__disclaimer { border-top: 1px solid var(--line-strong); margin-top: 28px; padding-top: 20px; }
+@media (max-width: 800px) { .financing__layout { grid-template-columns: 1fr; } }

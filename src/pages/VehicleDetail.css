@@ -344,3 +344,5 @@
     grid-template-columns: 1fr;
   }
 }
+
+.detail__finance { display: block; margin-top: 18px; color: var(--yellow); text-align: center; text-decoration: underline; text-underline-offset: 4px; }

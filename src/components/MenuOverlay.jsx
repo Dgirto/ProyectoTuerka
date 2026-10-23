@@ -20,6 +20,7 @@ const COLUMNS = [
     links: [
       { to: '/nosotros', label: 'Nosotros' },
       { to: '/nosotros#como-comprar', label: 'Cómo comprar' },
+      { to: '/simulador', label: 'Simular cuotas' },
     ],
   },
   {

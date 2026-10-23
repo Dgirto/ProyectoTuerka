@@ -84,6 +84,7 @@ function Detail({ vehicle }) {
           <Link to={`/contacto?vehiculo=${vehicle.id}&motivo=info#agenda`} className="btn btn--outline btn--block detail__cta detail__cta--ghost">
             Solicitar información <ChevronRight size={20} />
           </Link>
+          <Link to={`/simulador?vehiculo=${vehicle.id}`} className="detail__finance">Simular cuotas →</Link>
           <CompareButton vehicle={vehicle} />
           <ReservaBox vehicle={vehicle} />
           <button type="button" className={`detail__fav ${fav ? 'is-active' : ''}`} onClick={() => toggle(vehicle.id)} aria-pressed={fav}>

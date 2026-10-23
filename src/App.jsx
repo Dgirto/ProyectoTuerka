@@ -15,6 +15,7 @@ import Ingresar from './pages/Ingresar';
 import Cuenta from './pages/Cuenta';
 import Asesor from './pages/Asesor';
 import ReservaResultado from './pages/ReservaResultado';
+import Financing from './pages/Financing';
 import Compare from './pages/Compare';
 import CompareTray from './components/CompareTools';
 import RequireAuth from './components/RequireAuth';
@@ -22,6 +23,7 @@ import RequireAuth from './components/RequireAuth';
 const TITLES = {
   '/': 'Tu próximo camino empieza aquí',
   '/vehiculos': 'Vehículos',
+  '/simulador': 'Simulador de cuotas',
   '/comparar': 'Comparador',
   '/favoritos': 'Favoritos',
   '/contacto': 'Contacto',
@@ -77,6 +79,7 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/vehiculos" element={<Catalog />} />
           <Route path="/vehiculos/:id" element={<VehicleDetail />} />
+          <Route path="/simulador" element={<Financing />} />
           <Route path="/comparar" element={<Compare />} />
           <Route path="/favoritos" element={<Favorites />} />
           <Route path="/contacto" element={<Contact />} />
