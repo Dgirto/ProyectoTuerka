@@ -1,9 +1,10 @@
-import { useEffect } from 'react';
+import { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import Logo from './Logo';
 import { ArrowRight, CloseIcon, HeartIcon, SearchIcon } from './Icons';
 import road from '../assets/road.jpg';
 import './MenuOverlay.css';
+import { useDialog } from '../hooks/useDialog';
 
 const COLUMNS = [
   {
@@ -34,19 +35,16 @@ const COLUMNS = [
 ];
 
 export default function MenuOverlay({ open, onClose, onOpenSearch }) {
-  useEffect(() => {
-    if (!open) return undefined;
-    const onKey = (e) => e.key === 'Escape' && onClose();
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [open, onClose]);
+  const dialogRef = useRef(null);
+  useDialog(dialogRef, open, onClose);
+  if (!open) return null;
 
   return (
-    <div className={`menu ${open ? 'menu--open' : ''}`} role="dialog" aria-modal="true" aria-label="Menú principal" aria-hidden={!open}>
+    <div ref={dialogRef} tabIndex={-1} className={`menu ${open ? 'menu--open' : ''}`} role="dialog" aria-modal="true" aria-label="Menú principal" aria-hidden={!open}>
       <img className="menu__road" src={road} alt="" aria-hidden="true" />
 
       <div className="menu__top">
-        <button type="button" className="menu__close" onClick={onClose} tabIndex={open ? 0 : -1}>
+        <button type="button" className="menu__close" aria-label="Cerrar menú" onClick={onClose} tabIndex={open ? 0 : -1}>
           <CloseIcon size={30} />
           <span>Cerrar</span>
         </button>

@@ -19,6 +19,7 @@ import Help from './pages/Help';
 import Financing from './pages/Financing';
 import Compare from './pages/Compare';
 import CompareTray from './components/CompareTools';
+import { getVehicle, vehicleName } from './data/vehicles';
 import RequireAuth from './components/RequireAuth';
 
 const TITLES = {
@@ -49,8 +50,9 @@ function useScrollOnNavigate() {
   }, [pathname, hash]);
 
   useEffect(() => {
-    const title = TITLES[pathname];
-    if (title) document.title = `Tuerka · ${title}`;
+    const vehicle = pathname.startsWith('/vehiculos/') ? getVehicle(pathname.split('/')[2]) : null;
+    const title = TITLES[pathname] || (vehicle ? vehicleName(vehicle) : 'Página no encontrada');
+    document.title = `Tuerka · ${title}`;
   }, [pathname]);
 }
 
@@ -61,22 +63,19 @@ export default function App() {
 
   const closeMenu = useCallback(() => setMenuOpen(false), []);
   const closeSearch = useCallback(() => setSearchOpen(false), []);
-  const openSearch = useCallback(() => setSearchOpen(true), []);
+  const openSearch = useCallback(() => { setMenuOpen(false); setSearchOpen(true); }, []);
 
-  useEffect(() => {
-    document.body.style.overflow = menuOpen || searchOpen ? 'hidden' : '';
-  }, [menuOpen, searchOpen]);
 
   return (
     <>
-      <a href="#contenido" className="sr-only">
+      <a href="#contenido" className="skip-link">
         Saltar al contenido
       </a>
       <Header onOpenMenu={() => setMenuOpen(true)} onOpenSearch={openSearch} />
       <MenuOverlay open={menuOpen} onClose={closeMenu} onOpenSearch={openSearch} />
-      <SearchOverlay open={searchOpen} onClose={closeSearch} />
+      {searchOpen && <SearchOverlay open={searchOpen} onClose={closeSearch} />}
 
-      <main id="contenido">
+      <main id="contenido" tabIndex={-1}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/vehiculos" element={<Catalog />} />

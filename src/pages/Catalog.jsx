@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import VehicleCard from '../components/VehicleCard';
 import { Select } from '../components/ui';
@@ -6,6 +6,8 @@ import { CloseIcon } from '../components/Icons';
 import { FILTER_KEYS, draftFromParams, filterVehicles, priceRangeError } from '../lib/catalogo';
 import { BRANDS, BUDGETS, VEHICLE_TYPES, YEARS, vehicles } from '../data/vehicles';
 import './Catalog.css';
+import { useDialog } from '../hooks/useDialog';
+import { useMediaQuery } from '../hooks/useMediaQuery';
 
 const SORTS = [
   { value: 'precio-asc', label: 'Precio: menor a mayor' },
@@ -19,6 +21,11 @@ export default function Catalog() {
   const [draft, setDraft] = useState(() => draftFromParams(params));
   const [error, setError] = useState('');
   const [filtersOpen, setFiltersOpen] = useState(false);
+
+  const filterRef = useRef(null);
+  const mobile = useMediaQuery('(max-width: 960px)');
+  const closeFilters = useCallback(() => setFiltersOpen(false), []);
+  useDialog(filterRef, mobile && filtersOpen, closeFilters);
 
   useEffect(() => setDraft(draftFromParams(params)), [params]);
 
@@ -83,7 +90,7 @@ export default function Catalog() {
               options={SORTS}
             />
           </div>
-          <button type="button" className="btn btn--outline catalog__filters-toggle" onClick={() => setFiltersOpen(true)}>
+          <button type="button" className="btn btn--outline catalog__filters-toggle" aria-expanded={filtersOpen} aria-controls="catalog-filters" onClick={() => setFiltersOpen(true)}>
             Filtros
           </button>
         </div>
@@ -100,7 +107,7 @@ export default function Catalog() {
       )}
 
       <div className="catalog__layout">
-        <aside className={`filters ${filtersOpen ? 'filters--open' : ''}`} aria-label="Filtros">
+        <aside ref={filterRef} id="catalog-filters" tabIndex={-1} role={mobile && filtersOpen ? 'dialog' : undefined} aria-modal={mobile && filtersOpen ? true : undefined} inert={mobile && !filtersOpen ? '' : undefined} className={`filters ${filtersOpen ? 'filters--open' : ''}`} aria-label="Filtros">
           <form onSubmit={apply}>
             <div className="filters__mobile-head">
               <strong>Filtros</strong>
@@ -146,7 +153,7 @@ export default function Catalog() {
             </button>
           </form>
         </aside>
-        {filtersOpen && <div className="filters__backdrop" onClick={() => setFiltersOpen(false)} />}
+        {filtersOpen && <div data-dialog-backdrop="" className="filters__backdrop" onClick={() => setFiltersOpen(false)} />}
 
         <section aria-label="Resultados">
           {results.length > 0 ? (

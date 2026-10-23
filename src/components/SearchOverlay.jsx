@@ -1,39 +1,32 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight, CloseIcon, SearchIcon } from './Icons';
 import { formatPrice, typeLabel, vehicleName, vehicles } from '../data/vehicles';
 import './SearchOverlay.css';
+import { useDialog } from '../hooks/useDialog';
 import { matchesQuery } from '../lib/catalogo';
 
 export default function SearchOverlay({ open, onClose }) {
   const [q, setQ] = useState('');
+  const dialogRef = useRef(null);
   const inputRef = useRef(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!open) return undefined;
-    setQ('');
-    const t = setTimeout(() => inputRef.current?.focus(), 50);
-    const onKey = (e) => e.key === 'Escape' && onClose();
-    window.addEventListener('keydown', onKey);
-    return () => {
-      clearTimeout(t);
-      window.removeEventListener('keydown', onKey);
-    };
-  }, [open, onClose]);
+  useDialog(dialogRef, open, onClose, inputRef);
 
   const results = useMemo(() => (q.trim() ? vehicles.filter((v) => matchesQuery(v, q)) : []), [q]);
 
   const submit = (e) => {
     e.preventDefault();
     onClose();
+    setQ('');
     navigate(q.trim() ? `/vehiculos?q=${encodeURIComponent(q.trim())}` : '/vehiculos');
   };
 
   if (!open) return null;
 
   return (
-    <div className="search" role="dialog" aria-modal="true" aria-label="Buscar vehículos" onClick={onClose}>
+    <div ref={dialogRef} tabIndex={-1} className="search" role="dialog" aria-modal="true" aria-label="Buscar vehículos" onClick={onClose}>
       <div className="search__panel" onClick={(e) => e.stopPropagation()}>
         <form className="search__form" onSubmit={submit} role="search">
           <SearchIcon size={28} />

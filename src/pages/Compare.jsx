@@ -17,7 +17,7 @@ export default function Compare() {
   const raw = params.get('ids');
   const ids = raw === null ? selected : validVehicleIds(raw.split(','), vehicles.map((v) => v.id), COMPARE_LIMIT);
   const key = ids.join(',');
-  useEffect(() => { if (raw !== null) replace(key ? key.split(',') : []); }, [raw, key]);
+  useEffect(() => { if (raw !== null) replace(key ? key.split(',') : []); }, [raw, key, replace]);
   const chosen = ids.map(getVehicle);
   const remove = (id) => {
     const next = ids.filter((v) => v !== id);

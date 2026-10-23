@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { vehicles } from '../data/vehicles';
 import { readVehicleIds, validVehicleIds } from '../lib/seleccion';
 const CompareContext = createContext(null);
@@ -11,11 +11,9 @@ export function CompareProvider({ children }) {
   useEffect(() => {
     try { sessionStorage.setItem('tuerka:compare', JSON.stringify(ids)); } catch { /* Sesión sin almacenamiento */ }
   }, [ids]);
-  const value = useMemo(() => ({
-    ids,
-    replace: (next) => setIds(validVehicleIds(next, allowed, COMPARE_LIMIT)),
-    toggle: (id) => setIds((prev) => prev.includes(id) ? prev.filter((v) => v !== id) : validVehicleIds([...prev, id], allowed, COMPARE_LIMIT)),
-  }), [ids]);
+  const replace = useCallback((next) => setIds(validVehicleIds(next, allowed, COMPARE_LIMIT)), []);
+  const toggle = useCallback((id) => setIds((prev) => prev.includes(id) ? prev.filter((v) => v !== id) : validVehicleIds([...prev, id], allowed, COMPARE_LIMIT)), []);
+  const value = useMemo(() => ({ ids, replace, toggle }), [ids, replace, toggle]);
   return <CompareContext.Provider value={value}>{children}</CompareContext.Provider>;
 }
 export function useCompare() { return useContext(CompareContext); }

@@ -1,12 +1,14 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
+import { vehicles } from '../data/vehicles';
+import { readVehicleIds } from '../lib/seleccion';
+const allowed = vehicles.map((v) => v.id);
 const STORAGE_KEY = 'tuerka:favorites';
 const FavoritesContext = createContext(null);
 
 function readStored() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : ['toyota-corolla', 'kia-sportage', 'ford-ranger'];
+    return readVehicleIds(localStorage, STORAGE_KEY, allowed);
   } catch {
     return [];
   }
@@ -23,8 +25,14 @@ export function FavoritesProvider({ children }) {
     }
   }, [ids]);
 
+  useEffect(() => {
+    const sync = (e) => { if (e.key === STORAGE_KEY || e.key === null) setIds(readStored()); };
+    window.addEventListener('storage', sync);
+    return () => window.removeEventListener('storage', sync);
+  }, []);
+
   const toggle = useCallback(
-    (id) => setIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id])),
+    (id) => allowed.includes(id) && setIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id])),
     []
   );
   const remove = useCallback((id) => setIds((prev) => prev.filter((x) => x !== id)), []);

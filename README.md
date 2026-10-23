@@ -20,6 +20,9 @@ En Vercel, `vercel.json` redirige todas las rutas a `index.html` para que React 
 | `/` | Inicio: portada, buscador por tipo, marca y presupuesto, categorías y destacados |
 | `/vehiculos` | Catálogo con filtros, orden y búsqueda (los filtros viven en la URL) |
 | `/vehiculos/:id` | Detalle: galería, ficha, pestañas, favoritos, reserva con Mercado Pago y vehículos relacionados |
+| `/comparar` | Comparador de hasta tres vehículos; selección de sesión y enlace compartible `?ids=id1,id2` |
+| `/simulador` | Simulador orientativo con inicial, plazo y TEA; recibe `?vehiculo=id` desde la ficha |
+| `/ayuda` | Preguntas frecuentes con búsqueda y filtros por tema |
 | `/favoritos` | Vehículos guardados (se conservan en el navegador con `localStorage`) |
 | `/contacto` | Formulario "Agenda tu visita": con sesión iniciada, guarda la cotización y avisa por correo |
 | `/ingresar` | Ingreso y registro |
@@ -74,3 +77,19 @@ node supabase/pruebas-rls.mjs     # 19 comprobaciones de seguridad contra el Sup
 ```
 
 `.env` y `.env.local` no se suben al repositorio.
+
+## Mejoras de exploración y accesibilidad
+
+- La búsqueda admite palabras sin tildes y combina varios términos.
+- Los rangos de presupuesto incluyen sus límites sin solaparse: hasta 20 000; más de 20 000 y hasta 30 000; más de 30 000 dólares.
+- El catálogo valida mínimo y máximo, muestra cada filtro aplicado y permite volver a la selección anterior con el botón Atrás.
+- Los favoritos empiezan vacíos; se validan los IDs recuperados y se sincronizan entre pestañas del mismo navegador.
+- El comparador conserva hasta tres IDs en `sessionStorage`; las URLs compartidas descartan IDs desconocidos, repetidos y selecciones que excedan el límite.
+- El simulador usa cuotas constantes y convierte TEA a tasa efectiva mensual: `(1 + TEA/100) ** (1/12) - 1`. No incluye seguros ni comisiones. Admite tasa cero e inicial del 100%.
+- Menú, búsqueda y filtros móviles contienen el foco, cierran con Escape, bloquean el fondo y devuelven el foco al cerrar. Las pestañas de la ficha admiten flechas, Inicio y Fin.
+
+### Verificar los cambios
+
+`npm test` comprueba filtros, límites de precio, cuotas, selecciones persistidas, navegación y comportamiento de teclado, además de las pruebas existentes de reservas con servicios simulados. `npm run build` valida la compilación de producción.
+
+Las comprobaciones de interfaz usan un DOM local con datos de demostración; no envían correos ni realizan pagos. Las pruebas de RLS requieren Supabase local y se ejecutan por separado con el comando documentado arriba.

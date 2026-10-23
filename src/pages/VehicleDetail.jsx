@@ -127,6 +127,14 @@ function Detail({ vehicle }) {
               type="button"
               role="tab"
               id={`tab-${i}`}
+              tabIndex={tab === i ? 0 : -1}
+              onKeyDown={(e) => {
+                const keys = { ArrowRight: (i + 1) % TABS.length, ArrowLeft: (i + TABS.length - 1) % TABS.length, Home: 0, End: TABS.length - 1 };
+                if (!(e.key in keys)) return;
+                e.preventDefault();
+                setTab(keys[e.key]);
+                e.currentTarget.parentElement.querySelectorAll('[role="tab"]')[keys[e.key]].focus();
+              }}
               aria-selected={tab === i}
               aria-controls={`panel-${i}`}
               className={tab === i ? 'is-active' : ''}
@@ -137,15 +145,15 @@ function Detail({ vehicle }) {
           ))}
         </div>
 
-        <div className="tabs__panel" role="tabpanel" id={`panel-${tab}`} aria-labelledby={`tab-${tab}`}>
-          {tab === 0 && (
+        {TABS.map((_, i) => <div key={i} className="tabs__panel" role="tabpanel" hidden={tab !== i} id={`panel-${i}`} aria-labelledby={`tab-${i}`} tabIndex={0}>
+          {i === 0 && (
             <div className="tabs__cols">
               {vehicle.description.map((p) => (
                 <p key={p}>{p}</p>
               ))}
             </div>
           )}
-          {tab === 1 && (
+          {i === 1 && (
             <ul className="tabs__list-check">
               {vehicle.equipment.map((e) => (
                 <li key={e}>
@@ -154,7 +162,7 @@ function Detail({ vehicle }) {
               ))}
             </ul>
           )}
-          {tab === 2 && (
+          {i === 2 && (
             <ul className="tabs__list-check">
               {['Tarjeta de propiedad al día', 'Revisión técnica vigente', 'SOAT vigente', vehicle.condition === 'Nuevo' ? 'Garantía de fábrica' : 'Historial de mantenimiento en concesionario', 'Sin deudas ni gravámenes'].map((d) => (
                 <li key={d}>
@@ -163,7 +171,7 @@ function Detail({ vehicle }) {
               ))}
             </ul>
           )}
-        </div>
+        </div>)}
       </section>
 
       {related.length > 0 && (
