@@ -1,0 +1,22 @@
+.help { padding-top: 28px; padding-bottom: 72px; }
+.help__head { max-width: 1000px; margin: 36px 0; }
+.help__head h1 { font-size: clamp(52px, 6vw, 96px); margin: 12px 0 20px; }
+.help__layout { display: grid; grid-template-columns: minmax(240px, 1fr) minmax(0, 2fr); gap: clamp(24px, 4vw, 64px); align-items: start; }
+.help__contact { background: var(--panel); border-top: 3px solid var(--yellow); padding: 28px; }
+.help__contact h2 { font-size: clamp(32px, 3vw, 48px); }
+.help__contact p { color: var(--muted); margin: 24px 0; }
+.help__contact .btn { padding: 12px 16px; }
+.help__filters { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
+.help__filters input, .help__filters .select { margin-top: 8px; }
+.help__label, .help__filters label { font-size: 15px; }
+.help__count { color: var(--muted); font-size: 15px; }
+.help__item { border-top: 1px solid var(--line-strong); }
+.help__item:last-child { border-bottom: 1px solid var(--line-strong); }
+.help__item summary { padding: 24px 0; font-family: var(--font-condensed); font-size: 26px; font-weight: 600; cursor: pointer; }
+.help__item[open] summary { color: var(--yellow); }
+.help__item > div { padding: 0 0 28px; max-width: 800px; }
+.help__item p { margin-top: 0; color: var(--muted); }
+.help__item a { color: var(--yellow); text-decoration: underline; text-underline-offset: 4px; }
+.help__empty { padding: 32px; border: 1px dashed var(--line-strong); text-align: center; }
+@media (max-width: 800px) { .help__layout { grid-template-columns: 1fr; } .help__contact { order: 2; } }
+@media (max-width: 480px) { .help__filters { grid-template-columns: 1fr; } }

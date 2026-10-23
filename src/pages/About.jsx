@@ -52,6 +52,7 @@ export default function About() {
           ))}
         </ol>
       </section>
+      <div className="about__help"><Link to="/ayuda" className="btn btn--outline">¿Tienes dudas? Revisa nuestras preguntas frecuentes</Link></div>
     </div>
   );
 }

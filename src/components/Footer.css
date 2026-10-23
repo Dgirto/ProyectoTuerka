@@ -83,3 +83,5 @@
     flex-wrap: wrap;
   }
 }
+
+.footer__links { flex-wrap: wrap; }

@@ -30,6 +30,8 @@ export default function Footer() {
           <Link to="/nosotros">Nosotros</Link>
           <span aria-hidden="true">·</span>
           <Link to="/contacto">Contacto</Link>
+          <span aria-hidden="true">·</span>
+          <Link to="/ayuda">Preguntas frecuentes</Link>
         </nav>
 
         <div className="footer__end">

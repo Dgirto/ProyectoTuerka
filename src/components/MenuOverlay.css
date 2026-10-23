@@ -185,3 +185,5 @@
     align-items: flex-start;
   }
 }
+
+.menu__col a { white-space: normal; overflow-wrap: anywhere; }

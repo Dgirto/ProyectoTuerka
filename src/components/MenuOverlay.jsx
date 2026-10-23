@@ -28,6 +28,7 @@ const COLUMNS = [
     links: [
       { to: '/contacto', label: 'Contacto' },
       { to: '/contacto#agenda', label: 'Agendar visita' },
+      { to: '/ayuda', label: 'Preguntas frecuentes' },
     ],
   },
 ];

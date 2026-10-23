@@ -139,3 +139,6 @@
     width: 100%;
   }
 }
+
+.about__help { padding: 0 var(--gutter) 48px; text-align: center; }
+.about__help .btn { padding: 16px 24px; }
