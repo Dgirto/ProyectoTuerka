@@ -12,6 +12,7 @@ const COLUMNS = [
       { to: '/', label: 'Inicio' },
       { to: '/vehiculos', label: 'Vehículos' },
       { to: '/favoritos', label: 'Favoritos' },
+      { to: '/comparar', label: 'Comparador' },
     ],
   },
   {

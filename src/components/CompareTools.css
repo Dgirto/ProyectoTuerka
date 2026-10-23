@@ -1,0 +1,9 @@
+.compare-button { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-top: 16px; padding: 10px; border: 1px solid var(--line-strong); font-size: 15px; }
+.compare-button:hover, .compare-button.is-active { border-color: var(--yellow); color: var(--yellow); }
+.compare-button:disabled { opacity: .45; cursor: not-allowed; }
+.compare-tray { position: fixed; z-index: 60; bottom: 0; left: 0; right: 0; display: flex; align-items: center; gap: 24px; padding: 16px var(--gutter); background: var(--panel); border-top: 2px solid var(--yellow); box-shadow: 0 -8px 32px #0008; }
+.compare-tray > div { flex: 1; min-width: 0; }
+.compare-tray p { margin: 2px 0 0; color: var(--muted); font-size: 14px; }
+.compare-tray__clear { text-decoration: underline; font-size: 14px; }
+.has-compare-tray { padding-bottom: 120px; }
+@media (max-width: 640px) { .compare-tray { gap: 8px 16px; flex-wrap: wrap; padding: 12px 16px; } .compare-tray > div { flex-basis: 100%; } .compare-tray .btn { min-height: 44px; padding: 0 20px; font-size: 16px; } .has-compare-tray { padding-bottom: 180px; } }

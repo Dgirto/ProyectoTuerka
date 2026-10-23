@@ -6,6 +6,7 @@ import ReservaBox from '../components/ReservaBox';
 import { CalendarIcon, CheckIcon, ChevronLeft, ChevronRight, FuelIcon, GaugeIcon, GearsIcon, HeartIcon } from '../components/Icons';
 import { useFavorites } from '../context/FavoritesContext';
 import { formatPrice, getVehicle, typeLabel, vehicleName, vehicles } from '../data/vehicles';
+import { CompareButton } from '../components/CompareTools';
 import NotFound from './NotFound';
 import './VehicleDetail.css';
 
@@ -83,6 +84,7 @@ function Detail({ vehicle }) {
           <Link to={`/contacto?vehiculo=${vehicle.id}&motivo=info#agenda`} className="btn btn--outline btn--block detail__cta detail__cta--ghost">
             Solicitar información <ChevronRight size={20} />
           </Link>
+          <CompareButton vehicle={vehicle} />
           <ReservaBox vehicle={vehicle} />
           <button type="button" className={`detail__fav ${fav ? 'is-active' : ''}`} onClick={() => toggle(vehicle.id)} aria-pressed={fav}>
             <HeartIcon size={24} filled={fav} />

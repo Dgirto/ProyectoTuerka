@@ -12,6 +12,7 @@ import '@fontsource/barlow-condensed/700.css';
 import '@fontsource/montserrat/800.css';
 import './index.css';
 import App from './App';
+import { CompareProvider } from './context/CompareContext';
 import { FavoritesProvider } from './context/FavoritesContext';
 import { AuthProvider } from './context/AuthContext';
 
@@ -20,7 +21,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <BrowserRouter>
       <AuthProvider>
         <FavoritesProvider>
-          <App />
+          <CompareProvider><App /></CompareProvider>
         </FavoritesProvider>
       </AuthProvider>
     </BrowserRouter>

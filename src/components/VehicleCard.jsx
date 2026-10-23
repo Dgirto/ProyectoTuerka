@@ -1,3 +1,4 @@
+import { CompareButton } from './CompareTools';
 import { Link } from 'react-router-dom';
 import { ArrowRight, HeartIcon } from './Icons';
 import { useFavorites } from '../context/FavoritesContext';
@@ -48,6 +49,7 @@ export default function VehicleCard({ vehicle }) {
             Ver vehículo <ArrowRight size={18} />
           </Link>
         </div>
+        <CompareButton vehicle={vehicle} />
       </div>
     </article>
   );

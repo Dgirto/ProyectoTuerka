@@ -1,0 +1,20 @@
+.comparison { padding-top: 28px; padding-bottom: 72px; }
+.comparison__head { max-width: 1000px; margin: 36px 0; }
+.comparison__head h1 { font-size: clamp(48px, 5.6vw, 88px); margin: 12px 0 20px; }
+.comparison__head .btn { margin-top: 24px; }
+.comparison__scroll { overflow-x: auto; border: 1px solid var(--line-strong); }
+.comparison table { border-collapse: collapse; width: 100%; table-layout: fixed; min-width: 720px; }
+.comparison th, .comparison td { padding: 20px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); border-right: 1px solid var(--line); overflow-wrap: anywhere; }
+.comparison thead th { background: var(--panel); }
+.comparison thead th:first-child { width: 170px; }
+.comparison thead img { width: 100%; aspect-ratio: 16/9; object-fit: cover; margin-bottom: 16px; }
+.comparison__name { display: block; font-family: var(--font-condensed); font-size: 28px; text-transform: uppercase; line-height: 1.1; }
+.comparison th button { margin-top: 12px; color: var(--muted); font-size: 15px; text-decoration: underline; }
+.comparison tbody th { color: var(--muted); font-weight: 500; }
+.comparison tbody tr:first-child td { color: var(--yellow); font-weight: 700; font-size: 25px; }
+.comparison ul { padding-left: 18px; margin: 0; }
+.comparison li + li { margin-top: 10px; }
+.comparison td .btn { min-height: 44px; padding: 8px 16px; font-size: 16px; }
+.comparison__hint { color: var(--muted); font-size: 15px; }
+.comparison__empty { border: 1px dashed var(--line-strong); padding: 48px 24px; text-align: center; }
+.comparison__empty h2 { font-size: clamp(32px, 4vw, 48px); }
