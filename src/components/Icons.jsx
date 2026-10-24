@@ -26,6 +26,8 @@ export const ChevronLeft = make(<path d="M15 6l-6 6 6 6" />);
 export const ArrowRight = make(<><path d="M4 12h16" /><path d="M14 6l6 6-6 6" /></>);
 export const PauseIcon = make(<><path d="M10 8v8" /><path d="M14 8v8" /></>);
 export const PlayIcon = make(<path d="M9 7l8 5-8 5z" fill="currentColor" />);
+export const VolumeOffIcon = make(<><path d="M4 9h3l5-4v14l-5-4H4z" /><path d="M16 9.5l5 5M21 9.5l-5 5" /></>);
+export const VolumeOnIcon = make(<><path d="M4 9h3l5-4v14l-5-4H4z" /><path d="M16 9a4 4 0 010 6M18.5 6.5a7.5 7.5 0 010 11" /></>);
 export const InfoIcon = make(<><circle cx="12" cy="12" r="9" /><path d="M12 11v5" /><path d="M12 8h.01" /></>);
 export const TagIcon = make(<><path d="M3 12V4h8l10 10-8 8z" /><circle cx="7.5" cy="7.5" r="1.3" /></>);
 export const DollarIcon = make(<><circle cx="12" cy="12" r="9" /><path d="M15 9.5c-.5-1-1.6-1.5-3-1.5-1.7 0-3 .8-3 2s1.3 1.7 3 2 3 .8 3 2-1.3 2-3 2c-1.4 0-2.5-.5-3-1.5" /><path d="M12 6v12" /></>);

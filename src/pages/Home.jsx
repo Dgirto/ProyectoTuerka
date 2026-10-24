@@ -1,15 +1,90 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ChevronRight, DollarIcon, InfoIcon, PauseIcon, PlayIcon, TagIcon, TYPE_ICONS, CarSedan, ArrowRight } from '../components/Icons';
+import { ChevronRight, DollarIcon, InfoIcon, PauseIcon, PlayIcon, TagIcon, TYPE_ICONS, CarSedan, ArrowRight, VolumeOffIcon, VolumeOnIcon } from '../components/Icons';
 import { Select } from '../components/ui';
 import VehicleCard from '../components/VehicleCard';
 import { BRANDS, BUDGETS, VEHICLE_TYPES, vehicles } from '../data/vehicles';
 import hero from '../assets/hero-1.jpg';
+import heroVideo from '../assets/hero.mp4';
+import heroVideoSmall from '../assets/hero-720.mp4';
 import './Home.css';
+
+// Tiempo que se muestra la imagen de portada antes de pasar al video.
+const IMAGE_HOLD_MS = 2500;
+
+const prefersReducedMotion = () =>
+  typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+
+// Portada: arranca con la imagen y hace un fundido al video cuando está listo.
+function useHeroVideo() {
+  const videoRef = useRef(null);
+  const progressRef = useRef(null);
+  const heroRef = useRef(null);
+  const [playing, setPlaying] = useState(() => !prefersReducedMotion());
+  const [muted, setMuted] = useState(true);
+  const [showVideo, setShowVideo] = useState(false);
+  const [ready, setReady] = useState(false);
+  const [inView, setInView] = useState(true);
+
+  // Espera a que el video pueda reproducirse y deja ver la imagen unos segundos.
+  useEffect(() => {
+    if (!ready || showVideo || !playing) return undefined;
+    const t = setTimeout(() => setShowVideo(true), IMAGE_HOLD_MS);
+    return () => clearTimeout(t);
+  }, [ready, showVideo, playing]);
+
+  // Reproduce o pausa según el botón y si la portada está a la vista.
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || !showVideo) return;
+    if (playing && inView) video.play().catch(() => setPlaying(false));
+    else video.pause();
+  }, [playing, inView, showVideo]);
+
+  useEffect(() => {
+    if (videoRef.current) videoRef.current.muted = muted;
+  }, [muted]);
+
+  // Pausa el video cuando la portada sale de pantalla para ahorrar batería.
+  useEffect(() => {
+    const el = heroRef.current;
+    if (!el || !('IntersectionObserver' in window)) return undefined;
+    const io = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting), { threshold: 0.15 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  // Barra de progreso sincronizada con el video.
+  useEffect(() => {
+    const video = videoRef.current;
+    const bar = progressRef.current;
+    if (!video || !bar || !showVideo) return undefined;
+    let raf;
+    const tick = () => {
+      if (video.duration) bar.style.transform = `scaleX(${video.currentTime / video.duration})`;
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [showVideo]);
+
+  return {
+    heroRef,
+    videoRef,
+    progressRef,
+    playing,
+    muted,
+    showVideo,
+    togglePlay: () => setPlaying((p) => !p),
+    toggleMute: () => setMuted((m) => !m),
+    onReady: () => setReady(true),
+  };
+}
 
 export default function Home() {
   const navigate = useNavigate();
-  const [playing, setPlaying] = useState(true);
+  const hv = useHeroVideo();
+  const { playing } = hv;
   const [tipo, setTipo] = useState('');
   const [marca, setMarca] = useState('');
   const [presupuesto, setPresupuesto] = useState('');
@@ -25,9 +100,23 @@ export default function Home() {
 
   return (
     <div className="home">
-      <section className={`hero ${playing ? '' : 'hero--paused'}`}>
+      <section ref={hv.heroRef} className={`hero ${playing ? '' : 'hero--paused'} ${hv.showVideo ? 'hero--video' : ''}`}>
         <div className="hero__media" aria-hidden="true">
           <img src={hero} alt="" />
+          <video
+            ref={hv.videoRef}
+            className="hero__video"
+            muted
+            loop
+            playsInline
+            preload="auto"
+            poster={hero}
+            onCanPlayThrough={hv.onReady}
+            tabIndex={-1}
+          >
+            <source src={heroVideoSmall} type="video/mp4" media="(max-width: 900px)" />
+            <source src={heroVideo} type="video/mp4" />
+          </video>
         </div>
         <div className="hero__shade" aria-hidden="true" />
 
@@ -52,14 +141,23 @@ export default function Home() {
             <button
               type="button"
               className="hero__play"
-              onClick={() => setPlaying((p) => !p)}
-              aria-label={playing ? 'Pausar portada' : 'Reproducir portada'}
+              onClick={hv.togglePlay}
+              aria-label={playing ? 'Pausar video de portada' : 'Reproducir video de portada'}
             >
               {playing ? <PauseIcon size={20} /> : <PlayIcon size={18} />}
             </button>
+            <button
+              type="button"
+              className="hero__mute"
+              onClick={hv.toggleMute}
+              aria-label={hv.muted ? 'Activar sonido del video' : 'Silenciar video'}
+              aria-pressed={!hv.muted}
+            >
+              {hv.muted ? <VolumeOffIcon size={24} /> : <VolumeOnIcon size={24} />}
+            </button>
             <span className="hero__player-label">Video de portada</span>
             <span className="hero__progress" aria-hidden="true">
-              <span />
+              <span ref={hv.progressRef} />
             </span>
           </div>
         </div>

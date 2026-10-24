@@ -23,8 +23,22 @@
   animation: hero-zoom 12s ease-in-out infinite alternate;
 }
 
-.hero--paused .hero__media img,
-.hero--paused .hero__progress span {
+.hero__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 70% 60%;
+  opacity: 0;
+  transition: opacity 1.4s ease;
+}
+
+.hero--video .hero__video {
+  opacity: 1;
+}
+
+.hero--paused .hero__media img {
   animation-play-state: paused;
 }
 
@@ -88,6 +102,15 @@
   color: var(--black);
 }
 
+.hero__mute {
+  display: inline-flex;
+  color: var(--white);
+}
+
+.hero__mute:hover {
+  color: var(--yellow);
+}
+
 .hero__player-label {
   white-space: nowrap;
   color: var(--text);
@@ -109,17 +132,8 @@
   position: absolute;
   inset: 0;
   background: var(--yellow);
+  transform: scaleX(0);
   transform-origin: left;
-  animation: hero-progress 12s linear infinite;
-}
-
-@keyframes hero-progress {
-  from {
-    transform: scaleX(0);
-  }
-  to {
-    transform: scaleX(1);
-  }
 }
 
 /* Buscador */
