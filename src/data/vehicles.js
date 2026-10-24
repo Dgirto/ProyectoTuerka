@@ -1,6 +1,8 @@
 import corolla from '../assets/cars/corolla.jpg';
 import corolla2 from '../assets/cars/corolla-2.jpg';
 import corollaStudio from '../assets/cars/corolla-studio.jpg';
+import corollaSide from '../assets/cars/corolla-side.jpg';
+import corollaRear from '../assets/cars/corolla-rear.jpg';
 import sportage from '../assets/cars/sportage.jpg';
 import sportageStudio from '../assets/cars/sportage-studio.jpg';
 import mazda3 from '../assets/cars/mazda3.jpg';
@@ -37,7 +39,7 @@ export const vehicles = [
     km: 32000,
     price: 22900,
     image: corolla,
-    gallery: [corollaStudio, corolla, corolla2, interior],
+    gallery: [corollaStudio, corollaRear, corollaSide, interior, corolla, corolla2],
     description: [
       'El Toyota Corolla 2024 combina confiabilidad, eficiencia y un diseño moderno, siendo una excelente opción para quienes buscan un sedán versátil, cómodo y seguro para el día a día.',
       'Ofrece un manejo suave, un interior espacioso y un alto nivel de equipamiento, ideal para la ciudad y la carretera, con el respaldo de la calidad y durabilidad que caracterizan a Toyota.',
