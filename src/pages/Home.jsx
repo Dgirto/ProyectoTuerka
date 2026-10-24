@@ -5,8 +5,9 @@ import { Select } from '../components/ui';
 import VehicleCard from '../components/VehicleCard';
 import { BRANDS, BUDGETS, VEHICLE_TYPES, vehicles } from '../data/vehicles';
 import hero from '../assets/hero-1.jpg';
-import heroVideo from '../assets/hero.mp4';
-import heroVideoSmall from '../assets/hero-720.mp4';
+import heroVideoAv1 from '../assets/hero-av1.webm';
+import heroVideoVp9 from '../assets/hero-vp9.webm';
+import heroVideoMp4 from '../assets/hero.mp4';
 import './Home.css';
 
 // Tiempo que se muestra la imagen de portada antes de pasar al video.
@@ -114,8 +115,10 @@ export default function Home() {
             onCanPlayThrough={hv.onReady}
             tabIndex={-1}
           >
-            <source src={heroVideoSmall} type="video/mp4" media="(max-width: 900px)" />
-            <source src={heroVideo} type="video/mp4" />
+            {/* Mismo video en 1080p; el navegador usa el primer formato que soporte. */}
+            <source src={heroVideoAv1} type='video/webm; codecs="av01.0.08M.08, opus"' />
+            <source src={heroVideoVp9} type='video/webm; codecs="vp9, opus"' />
+            <source src={heroVideoMp4} type="video/mp4" />
           </video>
         </div>
         <div className="hero__shade" aria-hidden="true" />
