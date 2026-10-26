@@ -77,7 +77,8 @@ export async function crearReserva({ token, vehiculoId, origin, cfg, admin, fetc
           unit_price: cfg.monto,
         },
       ],
-      payer: { email: user.email },
+      // Sin `payer`: el correo de la cuenta Tuerka puede ser una cuenta real de Mercado Pago, y con credenciales
+      // de prueba eso bloquea el checkout ("una de las partes es de prueba"). Mercado Pago pide el correo en su página.
       external_reference: reserva.id,
       back_urls: { success: vuelta, failure: vuelta, pending: vuelta },
       auto_return: 'approved',

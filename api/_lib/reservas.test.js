@@ -69,6 +69,8 @@ describe('crearReserva', () => {
     expect(body.items[0]).toMatchObject({ currency_id: 'PEN', unit_price: 300, quantity: 1 });
     expect(body.external_reference).toBe('res-1');
     expect(body.notification_url).toBe('https://proyecto-tuerka.vercel.app/api/mercadopago-webhook');
+    // Un correo real como comprador bloquea el checkout con credenciales de prueba.
+    expect(body).not.toHaveProperty('payer');
     expect(admin.llamadas[1].update).toEqual({ mp_preference_id: 'pref-1' });
   });
 
