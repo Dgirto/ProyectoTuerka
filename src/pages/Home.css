@@ -304,3 +304,122 @@
     padding: 10px 0;
   }
 }
+
+/* Video de portada */
+.hero__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 70% 60%;
+  opacity: 1;
+}
+
+.hero__player button {
+  flex-shrink: 0;
+}
+
+/* Línea de tiempo */
+.hero__timeline {
+  --video-progress: 0%;
+
+  appearance: none;
+  -webkit-appearance: none;
+
+  flex: 1 1 160px;
+  width: min(700px, 40vw);
+  max-width: 700px;
+  min-width: 80px;
+  height: 28px;
+
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.hero__timeline::-webkit-slider-runnable-track {
+  height: 3px;
+  background: linear-gradient(
+    to right,
+    #ffc400 var(--video-progress),
+    rgba(255, 255, 255, 0.3) var(--video-progress)
+  );
+}
+
+.hero__timeline::-moz-range-track {
+  height: 3px;
+  background: linear-gradient(
+    to right,
+    #ffc400 var(--video-progress),
+    rgba(255, 255, 255, 0.3) var(--video-progress)
+  );
+}
+
+.hero__timeline::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+
+  width: 12px;
+  height: 12px;
+  margin-top: -4.5px;
+  border: none;
+  border-radius: 50%;
+  background: #ffc400;
+}
+
+.hero__timeline::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border: none;
+  border-radius: 50%;
+  background: #ffc400;
+}
+
+.hero__timeline:focus-visible {
+  outline: 2px solid #ffc400;
+  outline-offset: 4px;
+}
+
+.hero__player :disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.hero__video-error {
+  margin-top: 12px;
+  color: #fff;
+  font-size: 14px;
+}
+
+@media (max-width: 560px) {
+  .hero__player {
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+
+  .hero__timeline {
+    flex-basis: 100%;
+    width: 100%;
+    max-width: none;
+  }
+}
+
+/* Mostrar el video sin fundido ni animación de la imagen */
+.hero .hero__video {
+  opacity: 1;
+  transition: none;
+  animation: none;
+}
+
+.hero__media {
+  background: #101112;
+}
+
+/* Evita que una imagen antigua cubra el video */
+.hero__media > img {
+  display: none;
+}

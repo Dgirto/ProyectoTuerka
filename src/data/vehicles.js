@@ -3,12 +3,26 @@ import corolla2 from '../assets/cars/corolla-2.jpg';
 import corollaStudio from '../assets/cars/corolla-studio.jpg';
 import corollaSide from '../assets/cars/corolla-side.jpg';
 import corollaRear from '../assets/cars/corolla-rear.jpg';
-import sportage from '../assets/cars/sportage.jpg';
-import sportageStudio from '../assets/cars/sportage-studio.jpg';
-import mazda3 from '../assets/cars/mazda3.jpg';
-import tucson from '../assets/cars/tucson.jpg';
-import ranger from '../assets/cars/ranger.jpg';
-import swift from '../assets/cars/swift.jpg';
+import sportage from '../assets/cars/sportage-front.png';
+import sportageRear from '../assets/cars/sportage-rear.png';
+import sportageSide from '../assets/cars/sportage-side.png';
+import sportageInterior from '../assets/cars/sportage-interior.png';
+import mazda3 from '../assets/cars/mazda3-front.png';
+import mazda3Rear from '../assets/cars/mazda3-rear.png';
+import mazda3Side from '../assets/cars/mazda3-side.png';
+import mazda3Interior from '../assets/cars/mazda3-interior.png';
+import tucson from '../assets/cars/tucson-front.png';
+import tucsonRear from '../assets/cars/tucson-rear.png';
+import tucsonSide from '../assets/cars/tucson-side.png';
+import tucsonInterior from '../assets/cars/tucson-interior.png';
+import ranger from '../assets/cars/ranger-front.png';
+import rangerRear from '../assets/cars/ranger-rear.png';
+import rangerSide from '../assets/cars/ranger-side.png';
+import rangerInterior from '../assets/cars/ranger-interior.png';
+import swift from '../assets/cars/swift-front.png';
+import swiftRear from '../assets/cars/swift-rear.png';
+import swiftSide from '../assets/cars/swift-side.png';
+import swiftInterior from '../assets/cars/swift-interior.png';
 import interior from '../assets/interior.jpg';
 
 export const VEHICLE_TYPES = [
@@ -58,7 +72,7 @@ export const vehicles = [
     km: 0,
     price: 29900,
     image: sportage,
-    gallery: [sportage, sportageStudio],
+    gallery: [sportage, sportageRear, sportageSide, sportageInterior],
     description: [
       'La Kia Sportage 2024 es una SUV de diseño audaz que destaca por su tecnología, amplitud y confort en cada trayecto.',
       'Con una cabina moderna, gran capacidad de carga y sistemas de asistencia a la conducción, es ideal para familias y aventureros urbanos.',
@@ -77,7 +91,7 @@ export const vehicles = [
     km: 18500,
     price: 25900,
     image: mazda3,
-    gallery: [mazda3],
+    gallery: [mazda3, mazda3Rear, mazda3Side, mazda3Interior],
     description: [
       'El Mazda 3 2024 ofrece un diseño elegante inspirado en la filosofía Kodo y una experiencia de manejo dinámica y precisa.',
       'Su interior de alta calidad y su motor Skyactiv lo convierten en un sedán premium a un precio accesible.',
@@ -96,7 +110,7 @@ export const vehicles = [
     km: 0,
     price: 30900,
     image: tucson,
-    gallery: [tucson],
+    gallery: [tucson, tucsonRear, tucsonSide, tucsonInterior],
     description: [
       'La Hyundai Tucson 2024 sorprende con su diseño paramétrico y una propuesta híbrida eficiente para el uso diario.',
       'Espaciosa, conectada y segura, es la compañera ideal para quienes buscan una SUV moderna con bajo consumo.',
@@ -115,7 +129,7 @@ export const vehicles = [
     km: 24000,
     price: 37900,
     image: ranger,
-    gallery: [ranger],
+    gallery: [ranger, rangerRear, rangerSide, rangerInterior],
     description: [
       'La Ford Ranger 2024 es una pickup robusta y capaz, preparada para el trabajo pesado y las aventuras fuera de la ciudad.',
       'Con tracción 4x4, gran capacidad de remolque y una cabina tecnológica, combina fuerza y confort en un solo vehículo.',
@@ -134,7 +148,7 @@ export const vehicles = [
     km: 0,
     price: 15900,
     image: swift,
-    gallery: [swift],
+    gallery: [swift, swiftRear, swiftSide, swiftInterior],
     description: [
       'El Suzuki Swift 2024 es un hatchback ágil y eficiente, perfecto para moverse con facilidad por la ciudad.',
       'Su bajo consumo, tamaño compacto y equipamiento completo lo hacen ideal como primer auto o para el día a día.',
@@ -150,3 +164,4 @@ export const getVehicle = (id) => vehicles.find((v) => v.id === id);
 export const typeLabel = (id) => VEHICLE_TYPES.find((t) => t.id === id)?.singular ?? id;
 export const vehicleName = (v) => `${v.brand} ${v.model}`;
 export const formatPrice = (n) => n.toLocaleString('en-US');
+
